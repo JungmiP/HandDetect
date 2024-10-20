@@ -9,7 +9,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 
-model = keras.models.load_model('../hand_lstm_train_result')
+model = keras.models.load_model('../hand_detect/hand_lstm_train_result')
 model.summary()
 
 seq_length = 5
@@ -38,7 +38,6 @@ def lstm_detect01():
             if results.multi_hand_landmarks != None:
                 for hand_landmarks in results.multi_hand_landmarks:
                     joint = np.zeros((21, 3))
-                    joint = np.zeros((21, 3))
                     for j, lm in enumerate(hand_landmarks.landmark):
                         joint[j] = [lm.x, lm.y, lm.z]
 
@@ -66,7 +65,7 @@ def lstm_detect01():
                     input_arr = np.array(last_seq, dtype=np.float32)
                     input_lstm_arr = input_arr.reshape(1, 5, 78)
                     y_pred = model.predict(input_lstm_arr)
-                    idx = int(np.argmax(y_pred))
+                    idx = np.argmax(y_pred)
                     letter = gesture[idx]
                     conf = y_pred[0, idx]
                     lstm_result.append({
